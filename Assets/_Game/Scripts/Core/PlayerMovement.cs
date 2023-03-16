@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,13 +12,19 @@ namespace Airhockey.Core {
         [SerializeField, BoxGroup("Dash")] private float dashMaxVelocity = 1f;
         [SerializeField, BoxGroup("Dash")] private float dashChargeSpeed = 1f;
         [SerializeField, BoxGroup("Dash")] private float dashCooldown = 1f;
+        [SerializeField, BoxGroup("Dash")] private float dashAimConeAngle = 45f;
+        [SerializeField, BoxGroup("Dash")] private int dashAimIterations = 10;
+        [SerializeField, BoxGroup("Dash")] private LayerMask dashAimMask;
 
         private Rigidbody m_rigidbody;
-        private Vector3 m_input;
+        private float m_dashCharge = 0.0f;
+        private Vector3 m_aimDirection;
+        public Vector3 Input { get; private set; }
 
-        private bool m_dashCharging = false;
-        private float m_dashChargeStrength = 0.0f;
-        private bool m_dashOnCooldown = false;
+        public bool DashCharging { get; private set; } = false;
+
+        public float DashCharge => (m_dashCharge / dashMaxVelocity);
+        public bool DashOnCooldown { get; private set; } = false;
 
         private void Awake() {
             m_rigidbody = GetComponent<Rigidbody>();
@@ -26,22 +34,30 @@ namespace Airhockey.Core {
             if (IsLocked) return;
 
             var i = ctx.ReadValue<Vector2>();
-            m_input = new Vector3(i.x, 0f, i.y);
+            Input = new Vector3(i.x, 0f, i.y);
         }
 
         public void OnDash(InputAction.CallbackContext ctx) {
             if (IsLocked) return;
 
-            if (!m_dashCharging && ctx.performed) {
-                m_dashCharging = true;
+            if (!DashCharging && !DashOnCooldown && ctx.performed) {
+                DashCharging = true;
+                DashOnCooldown = true;
+                SlowmoManager.StartSlowmo(Player.Id);
                 return;
             }
 
-            if (!m_dashCharging || !ctx.canceled) return;
+            if (!DashCharging || !ctx.canceled) return;
 
-            m_dashCharging = false;
-            m_rigidbody.AddForce(m_input * m_dashChargeStrength, ForceMode.Impulse);
-            m_dashChargeStrength = 0.0f;
+            m_aimDirection = AimDirection();
+
+            m_rigidbody.AddForce(m_aimDirection * m_dashCharge, ForceMode.Impulse);
+            m_dashCharge = 0.0f;
+
+            DashCharging = false;
+            SlowmoManager.StopSlowmo(Player.Id);
+            DashOnCooldown = false;
+            //DOTween.Sequence().AppendInterval(dashCooldown).OnComplete(() => DashOnCooldown = false);
         }
 
         private void FixedUpdate() {
@@ -49,25 +65,16 @@ namespace Airhockey.Core {
         }
 
         private void Move() {
-            if (IsLocked) {
-                m_rigidbody.velocity = Vector3.zero;
-                return;
-            }
+            if (IsLocked) return;
 
-            if (m_dashCharging) {
+            if (DashCharging) {
                 m_rigidbody.velocity = Vector3.zero;
-                m_dashChargeStrength = Mathf.Clamp(m_dashChargeStrength + (dashChargeSpeed * Time.deltaTime), 0.0f,
+                m_dashCharge = Mathf.Clamp(m_dashCharge + (dashChargeSpeed * Time.fixedUnscaledDeltaTime), 0.0f,
                     dashMaxVelocity);
                 return;
             }
 
-            m_rigidbody.AddForce(m_input * movementSpeed, ForceMode.Acceleration);
-        }
-
-        private IEnumerator Cooldown(float duration) {
-            m_dashOnCooldown = true;
-            yield return new WaitForSeconds(duration);
-            m_dashOnCooldown = false;
+            m_rigidbody.AddForce(Input * movementSpeed, ForceMode.Acceleration);
         }
 
         private void OnDrawGizmos() {
@@ -75,13 +82,84 @@ namespace Airhockey.Core {
             var origin = transform.position;
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(origin, origin + m_input);
+            Gizmos.DrawLine(origin, origin + Input);
 
             Gizmos.color = Color.green;
             Gizmos.DrawLine(origin, origin + m_rigidbody.velocity);
 
             Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(origin, origin + m_input * m_dashChargeStrength);
+            Gizmos.DrawLine(origin, origin + m_aimDirection * m_dashCharge);
+
+            /*Gizmos.color = Color.white;
+            var minAngle = -dashAimConeAngle;
+            var maxAngle = dashAimConeAngle;
+            var diff = minAngle - maxAngle;
+            var stepSize = diff / dashAimIterations;
+
+            var angle = Vector3.SignedAngle(Vector3.forward, Input, Vector3.up);
+            angle -= minAngle;
+
+            for (int i = 0; i < dashAimIterations; i++) {
+                var dir = DirFromAngle(angle, true);
+                angle += stepSize;
+
+                Ray ray = new Ray(transform.position, dir);
+                Gizmos.color = Physics.Raycast(ray, float.PositiveInfinity, dashAimMask)
+                    ? Color.magenta
+                    : Color.white;
+                Gizmos.DrawLine(origin, origin + dir * 0.5f);
+            }*/
+        }
+
+        public override void OnLock() {
+            DashCharging = false;
+            m_dashCharge = 0.0f;
+            m_rigidbody.velocity = Vector3.zero;
+        }
+
+        private Vector3 AimDirection() {
+            var minAngle = -dashAimConeAngle;
+            var maxAngle = dashAimConeAngle;
+            var diff = minAngle - maxAngle;
+            var stepSize = diff / dashAimIterations;
+
+            var angle = Vector3.SignedAngle(Vector3.forward, Input, Vector3.up);
+            angle -= minAngle;
+
+            List<Vector3> dirs = new List<Vector3>();
+            RaycastHit hitInfo = new RaycastHit();
+            for (int i = 0; i < dashAimIterations; i++) {
+                var dir = DirFromAngle(angle, true);
+                angle += stepSize;
+
+                Ray ray = new Ray(transform.position, dir);
+                if (Physics.Raycast(ray, out hitInfo, float.PositiveInfinity, dashAimMask)) {
+                    dirs.Add(dir);
+                }
+            }
+
+            if (dirs.Count <= 0) return Input;
+
+            var sum = Vector3.zero;
+            foreach (var dir in dirs) {
+                sum += dir;
+            }
+
+            var center = (sum / dirs.Count);
+
+            if (hitInfo.collider != null && hitInfo.collider.TryGetComponent(out Rigidbody rigidbody)) {
+                center += rigidbody.velocity * 0.5f;
+            }
+
+            return center;
+        }
+
+        private Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) {
+            if (!angleIsGlobal) {
+                angleInDegrees += transform.eulerAngles.y;
+            }
+
+            return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
         }
     }
 }

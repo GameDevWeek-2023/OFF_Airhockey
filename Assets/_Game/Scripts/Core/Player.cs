@@ -1,6 +1,4 @@
-﻿using System;
-using Airhockey.Events;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Airhockey.Core {
     public class Player : MonoBehaviour {
@@ -9,29 +7,28 @@ namespace Airhockey.Core {
 
         public int Id { get; private set; }
 
+        public GameManager.PlayerDetails Details { get; private set; }
+
         private PlayerBehaviour[] Behaviours =>
             m_behaviours ??= GetComponents<PlayerBehaviour>();
 
-        private void OnEnable() {
-            Signals.Subscribe(GameSignal.OnGoalScored, OnGoalScored);
-        }
-
-        private void OnDisable() {
-            Signals.Unsubscribe(GameSignal.OnGoalScored, OnGoalScored);
-        }
-
         public bool IsLocked {
             get => isLocked;
-            set => isLocked = value;
+            set {
+                IsLocked = value;
+                foreach (var behaviour in m_behaviours) {
+                    if (value)
+                        behaviour.OnLock();
+                    else
+                        behaviour.OnLock();
+                }
+            }
         }
 
         public bool Join(int index) {
             Id = index;
+            Details = GameManager.GetPlayerDetails(index);
             return true;
-        }
-
-        private void OnGoalScored(Signals.Args obj) {
-            IsLocked = true;
         }
     }
 }

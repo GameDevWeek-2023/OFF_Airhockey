@@ -2,6 +2,8 @@
     public enum GameSignal {
         OnGoalScored,
         OnRoundEnd,
-        OnMatchEnd
+        OnMatchEnd,
+        OnSlowmoStart,
+        OnSlowmoEnd,
     }
 }
