@@ -1,86 +1,37 @@
 ﻿using System;
-using System.Collections;
-using NaughtyAttributes;
+using Airhockey.Events;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Airhockey.Core {
-    [RequireComponent(typeof(Rigidbody))]
     public class Player : MonoBehaviour {
-        [SerializeField] private bool isLocked = false;
-        [SerializeField, BoxGroup("Movement")] private float movementSpeed = 1f;
-        [SerializeField, BoxGroup("Dash")] private float dashMaxVelocity = 1f;
-        [SerializeField, BoxGroup("Dash")] private float dashChargeSpeed = 1f;
-        [SerializeField, BoxGroup("Dash")] private float dashCooldown = 1f;
+        [SerializeField] private bool isLocked;
+        private PlayerBehaviour[] m_behaviours;
 
-        private Rigidbody m_rigidbody;
-        private Vector3 m_input;
+        public int Id { get; private set; }
 
-        private bool m_dashCharging = false;
-        private float m_dashChargeStrength = 0.0f;
-        private bool m_dashOnCooldown = false;
+        private PlayerBehaviour[] Behaviours =>
+            m_behaviours ??= GetComponents<PlayerBehaviour>();
 
-        private void Awake() {
-            m_rigidbody = GetComponent<Rigidbody>();
+        private void OnEnable() {
+            Signals.Subscribe(GameSignal.OnGoalScored, OnGoalScored);
         }
 
-        public void OnMove(InputAction.CallbackContext ctx) {
-            if (isLocked) return;
-
-            var i = ctx.ReadValue<Vector2>();
-            m_input = new Vector3(i.x, 0f, i.y);
+        private void OnDisable() {
+            Signals.Unsubscribe(GameSignal.OnGoalScored, OnGoalScored);
         }
 
-        public void OnDash(InputAction.CallbackContext ctx) {
-            if (isLocked) return;
-
-            if (!m_dashCharging && ctx.performed) {
-                m_dashCharging = true;
-                return;
-            }
-
-            if (!m_dashCharging || !ctx.canceled) return;
-
-            m_dashCharging = false;
-            m_rigidbody.AddForce(m_input * m_dashChargeStrength, ForceMode.Impulse);
-            m_dashChargeStrength = 0.0f;
+        public bool IsLocked {
+            get => isLocked;
+            set => isLocked = value;
         }
 
-        private void FixedUpdate() {
-            Move();
+        public bool Join(int index) {
+            Id = index;
+            return true;
         }
 
-        private void Move() {
-            if (isLocked) return;
-
-            if (m_dashCharging) {
-                m_rigidbody.velocity = Vector3.zero;
-                m_dashChargeStrength = Mathf.Clamp(m_dashChargeStrength + (dashChargeSpeed * Time.deltaTime), 0.0f,
-                    dashMaxVelocity);
-                return;
-            }
-
-            m_rigidbody.AddForce(m_input * movementSpeed, ForceMode.Acceleration);
-        }
-
-        private IEnumerator Cooldown(float duration) {
-            m_dashOnCooldown = true;
-            yield return new WaitForSeconds(duration);
-            m_dashOnCooldown = false;
-        }
-
-        private void OnDrawGizmos() {
-            if (m_rigidbody == null) return;
-            var origin = transform.position;
-
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(origin, origin + m_input);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(origin, origin + m_rigidbody.velocity);
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(origin, origin + m_input * m_dashChargeStrength);
+        private void OnGoalScored(Signals.Args obj) {
+            IsLocked = true;
         }
     }
 }
