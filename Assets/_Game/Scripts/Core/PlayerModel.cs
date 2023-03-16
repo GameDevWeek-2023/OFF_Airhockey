@@ -17,5 +17,6 @@ namespace Airhockey.Core {
 
             Destroy(m_model);
         }
+
     }
 }
