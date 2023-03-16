@@ -1,50 +1,49 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Airhockey.Utils.FSM {
-    public class StateMachine<TKey> {
-        private readonly Dictionary<TKey, State> m_states;
-        private State m_currentState;
+    public class StateMachine<TMachine, TParent> where TParent : MonoBehaviour
+        where TMachine : StateMachine<TMachine, TParent> {
+        private readonly Dictionary<string, State<TMachine, TParent>> m_states;
+        private State<TMachine, TParent> m_currentState;
 
-        public StateMachine() {
-            m_states = new Dictionary<TKey, State>();
+        public TParent Parent { get; }
+
+        public StateMachine(TParent parent) {
+            Parent = parent;
+
+            m_states = new Dictionary<string, State<TMachine, TParent>>();
         }
 
-        public void Entry(TKey key) {
-            if (!TryGetState(key, out State state)) return;
+        public bool Entry(string key) {
+            if (!m_states.TryGetValue(key, out State<TMachine, TParent> state)) return false;
 
             m_currentState = state;
-            m_currentState.OnEnter();
-        }
-
-        public bool AddState(TKey key, State state) {
-            if (!Contains(key)) return false;
-
-            m_states.Add(key, state);
+            m_currentState?.OnEnter();
             return true;
         }
 
-        public bool RemoveState(TKey key) {
-            if (Contains(key)) return false;
+        public bool AddState(string key, State<TMachine, TParent> state) {
+            if (m_states.ContainsKey(key)) return false;
+
+            m_states.Add(key, state);
+            state.Init(this as TMachine);
+            return true;
+        }
+
+        public bool RemoveState(string key) {
+            if (!m_states.ContainsKey(key)) return false;
 
             m_states.Remove(key);
             return true;
         }
 
-        public bool Contains(TKey key) {
-            return m_states.ContainsKey(key);
-        }
+        public void SwitchState(string key) {
+            if (!m_states.TryGetValue(key, out State<TMachine, TParent> state)) return;
 
-        public bool TryGetState(TKey key, out State state) {
-            return m_states.TryGetValue(key, out state);
-        }
-
-        public bool SwitchState(TKey key) {
-            if (!TryGetState(key, out State state)) return false;
-
-            m_currentState?.OnExit();
+            m_currentState.OnExit();
             m_currentState = state;
-            m_currentState?.OnEnter();
-            return false;
+            m_currentState.OnEnter();
         }
 
         public void Update() {

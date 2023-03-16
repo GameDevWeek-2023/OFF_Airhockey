@@ -8,12 +8,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Post Process
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Divider
+  - Player
+  - Puck
   - 
   - 
   - 
