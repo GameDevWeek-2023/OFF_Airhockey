@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-namespace _Game.Scripts.Ambient {
+namespace Airhockey.Ambient {
     public abstract class Anim : MonoBehaviour {
         [SerializeField] protected float cooldown = 0.1f;
         private bool m_isAnimating;

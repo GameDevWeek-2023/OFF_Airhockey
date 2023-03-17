@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Airhockey.Events;
 using UnityEngine;
 
@@ -18,6 +17,7 @@ namespace Airhockey.Core {
         public int MaxGoals => maxGoals;
 
         private void Awake() {
+            m_arena = GetComponent<Arena>();
             m_round = new Round(this);
         }
 

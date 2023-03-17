@@ -4,7 +4,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace _Lab.Outline {
     [Serializable]
-    [PostProcess(typeof(OutlineRenderer), PostProcessEvent.AfterStack, "Custom/Outline")]
+    [PostProcess(typeof(OutlineRenderer), PostProcessEvent.BeforeStack, "Custom/Outline")]
     public sealed class Outline : PostProcessEffectSettings {
         public ColorParameter color = new ColorParameter() { value = Color.black };
         public FloatParameter scale = new FloatParameter() { value = 1f };

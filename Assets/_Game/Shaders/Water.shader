@@ -11,6 +11,7 @@
         _FoamDistortion("Distortion", 2D) = "white"{}
         _FoamDistortionStrength("Distortion Strength", Range(0, 1)) = 0.5
         _FoamColor("Color", Color) = (1, 1, 1)
+        _FoamStrength("Strength", float) = 0.15
         _FoamThreshold("Threshold", float) = 0.2
 
         [Header(Fog)]
@@ -65,10 +66,14 @@
             fixed3 _Color;
 
             sampler2D _FoamTex;
+            float4 _FoamTex_ST;
+
             sampler2D _FoamDistortion;
+            float4 _FoamDistortion_ST;
 
             float _FoamDistortionStrength, _FoamThreshold;
             fixed3 _FoamColor;
+            float _FoamStrength;
 
             float _FogThreshold;
             fixed3 _FogColor;
@@ -104,9 +109,12 @@
                 const float2 dir_1 = float2(_Time.x, 0.0f);
                 const float2 dir_2 = float2(0.0f, _Time.x);
 
-                const float3 distortion_tex = UnpackNormalWithScale(tex2D(_FoamDistortion, i.world_pos.xz + dir_1),
+                const float2 distortion_uv = (i.world_pos.xz * _FoamDistortion_ST.xy) + _FoamDistortion_ST.zw + dir_1;
+                const float3 distortion_tex = UnpackNormalWithScale(tex2D(_FoamDistortion, distortion_uv),
                                                                     _FoamDistortionStrength);
-                fixed3 main_tex = tex2D(_MainTex, i.world_pos.xz + distortion_tex.xz + dir_2);
+
+                const float2 main_uv = (i.world_pos.xz * _MainTex_ST.xy) * _MainTex_ST.zw;
+                fixed3 main_tex = tex2D(_MainTex, main_uv + distortion_tex.xz + dir_2);
                 main_tex += (1 - main_tex) * 0.5f;
                 main_tex *= _Color.xyz;
 
@@ -115,8 +123,9 @@
                 const float fog_diff = saturate(depth / _FogThreshold);
                 const float foam_diff = saturate(depth / _FoamThreshold);
 
-                const float3 foam_tex = tex2D(_FoamTex, i.world_pos.xz + (distortion_tex.xz));
-                const float foam = saturate(step(foam_diff + foam_tex, 0.99f) + step(foam_tex, 0.2f));
+                const float3 foam_tex = tex2D(
+                    _FoamTex, (i.world_pos.xz * _FoamTex_ST.xy + _FoamTex_ST.zw) + (distortion_tex.xz));
+                const float foam = saturate(step(foam_diff + foam_tex, 0.99f) + step(foam_tex, _FoamStrength));
 
                 float3 col = lerp(_FogColor, main_tex.xyz, fog_diff);
                 col = lerp(col, _FoamColor, foam);

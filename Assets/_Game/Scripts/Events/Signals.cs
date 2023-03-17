@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using DG.Tweening;
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Airhockey.Events {
     public static class Signals {
@@ -52,7 +49,7 @@ namespace Airhockey.Events {
                 if (Actions.TryGetValue(key, out Event evt)) return evt;
 
                 evt = new Event();
-                evt.Performed += args => { Debug.Log($"[Signals]: Event {key}, Value: {args}"); };
+                //evt.Performed += args => { Debug.Log($"[Signals]: Event {key}, Value: {args}"); };
                 Actions.Add(key, evt);
 
                 return evt;

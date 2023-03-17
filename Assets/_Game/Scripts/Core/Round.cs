@@ -7,22 +7,17 @@ namespace Airhockey.Core {
     public class Round : StateMachine<Round, Match> {
         private class CountdownState : State<Round, Match> {
             public override void OnEnter() {
-                Debug.Log("[OnEnter] Start Countdown");
                 var sequence = DOTween.Sequence();
                 sequence.AppendInterval(Parent.Countdown).AppendCallback(() => { StateMachine.SwitchState("enable"); });
             }
 
-            public override void OnExit() {
-                Debug.Log("[OnExit] Start Countdown");
-            }
+            public override void OnExit() { }
 
             public override void OnUpdate() { }
         }
 
         private class EnableState : State<Round, Match> {
             public override void OnEnter() {
-                Debug.Log("[OnEnter] Start Enable");
-
                 Parent.Arena.LockPlayer = false;
 
                 StateMachine.SwitchState("waitForGoal");
@@ -35,13 +30,13 @@ namespace Airhockey.Core {
 
         private class WaitForGoalState : State<Round, Match> {
             public override void OnEnter() {
-                Debug.Log("[OnEnter] Wait for goal");
-
                 Signals.Subscribe(GameSignal.OnGoalScored, OnGoalScored);
+                Signals.Publish(GameSignal.OnStartSpawnPortals);
             }
 
             public override void OnExit() {
                 Signals.Unsubscribe(GameSignal.OnGoalScored, OnGoalScored);
+                Signals.Publish(GameSignal.OnStopSpawnPortals);
             }
 
             private void OnGoalScored(Signals.Args obj) {
@@ -56,8 +51,6 @@ namespace Airhockey.Core {
 
         private class DisableState : State<Round, Match> {
             public override void OnEnter() {
-                Debug.Log("[OnEnter] disable");
-
                 Parent.Arena.LockPlayer = true;
 
                 Parent.Arena.ResetPlayer();
@@ -69,7 +62,7 @@ namespace Airhockey.Core {
                     StateMachine.SwitchState("countdown");
                     return;
                 }
-                
+
                 Signals.Publish(GameSignal.OnMatchEnd);
             }
 

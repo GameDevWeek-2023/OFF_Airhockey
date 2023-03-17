@@ -4,10 +4,9 @@ namespace Airhockey.Core {
     public class Player : MonoBehaviour {
         [SerializeField] private bool isLocked;
         private PlayerBehaviour[] m_behaviours;
+        private PlayerDetails m_details;
 
-        public int Id { get; private set; }
-
-        public GameManager.PlayerDetails Details { get; private set; }
+        public int Id { get; private set; } = 0;
 
         private PlayerBehaviour[] Behaviours =>
             m_behaviours ??= GetComponents<PlayerBehaviour>();
@@ -15,19 +14,32 @@ namespace Airhockey.Core {
         public bool IsLocked {
             get => isLocked;
             set {
-                IsLocked = value;
-                foreach (var behaviour in m_behaviours) {
-                    if (value)
+                foreach (var behaviour in Behaviours) {
+                    if (value) {
                         behaviour.OnLock();
-                    else
-                        behaviour.OnLock();
+                    }
+                    else {
+                        behaviour.OnUnlock();
+                    }
                 }
+
+                isLocked = value;
             }
+        }
+
+        public bool TryGetDetails(out PlayerDetails details) {
+            if (m_details == null) {
+                details = null;
+                return false;
+            }
+
+            details = m_details;
+            return true;
         }
 
         public bool Join(int index) {
             Id = index;
-            Details = GameManager.GetPlayerDetails(index);
+            m_details = GameManager.GetPlayerDetails(index);
             return true;
         }
     }

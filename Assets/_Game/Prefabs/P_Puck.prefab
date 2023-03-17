@@ -93,8 +93,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8782190381863023003}
-  - component: {fileID: 7614381097162623733}
   - component: {fileID: 4586900551301985437}
+  - component: {fileID: 7614381097162623733}
+  - component: {fileID: 190496220479225220}
   - component: {fileID: 3644511693032948966}
   - component: {fileID: 4049454957519869178}
   - component: {fileID: 159002938017890742}
@@ -114,13 +115,27 @@ Transform:
   m_GameObject: {fileID: 8262780627355200289}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1912961834420190141}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &4586900551301985437
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262780627355200289}
+  m_Material: {fileID: 13400000, guid: 3b5b31ef0863dc14e97242592da20678, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5090769268323970088, guid: f61746cedeb70d54e9beb73a7331e1ac, type: 3}
 --- !u!54 &7614381097162623733
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -137,20 +152,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 2
---- !u!64 &4586900551301985437
-MeshCollider:
+--- !u!114 &190496220479225220
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8262780627355200289}
-  m_Material: {fileID: 13400000, guid: 3b5b31ef0863dc14e97242592da20678, type: 2}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5090769268323970088, guid: f61746cedeb70d54e9beb73a7331e1ac, type: 3}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac12d439184d42e6be552f16003a9252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVelocity: {x: 2, y: 7}
+  durationToMax: 30
 --- !u!114 &3644511693032948966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,6 +214,7 @@ MonoBehaviour:
   cooldown: 0.1
   punch: {x: 0.25, y: 0.25, z: 0.25}
   duration: 0.1
+  ease: 31
 --- !u!114 &159002938017890742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,5 +227,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6069e4b564a42d4a52c66369b6476fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 5
+  maxVelocity: 7
   intensity: 0.35

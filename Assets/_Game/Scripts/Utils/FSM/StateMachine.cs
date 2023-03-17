@@ -38,12 +38,13 @@ namespace Airhockey.Utils.FSM {
             return true;
         }
 
-        public void SwitchState(string key) {
-            if (!m_states.TryGetValue(key, out State<TMachine, TParent> state)) return;
+        public bool SwitchState(string key) {
+            if (!m_states.TryGetValue(key, out State<TMachine, TParent> state)) return false;
 
             m_currentState.OnExit();
             m_currentState = state;
             m_currentState.OnEnter();
+            return true;
         }
 
         public void Update() {

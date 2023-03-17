@@ -5,5 +5,7 @@
         OnMatchEnd,
         OnSlowmoStart,
         OnSlowmoEnd,
+        OnStartSpawnPortals,
+        OnStopSpawnPortals
     }
 }

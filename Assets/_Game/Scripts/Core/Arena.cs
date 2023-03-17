@@ -16,7 +16,7 @@ namespace Airhockey.Core {
         private readonly Dictionary<int, Player> m_players = new Dictionary<int, Player>();
         private PlayerInputManager m_playerInputManager;
         private int m_maxPlayerCount = 2;
-        private GameObject m_puckObject;
+        private Puck m_puck;
 
         public int PlayerCount => m_players.Count;
         public Player[] Players => m_players.Values.ToArray();
@@ -50,16 +50,17 @@ namespace Airhockey.Core {
         }
 
         public void SpawnPuck(int index) {
-            if (m_puckObject == null) {
-                m_puckObject = Instantiate(puckPrefab);
+            if (m_puck == null) {
+                var obj = Instantiate(puckPrefab);
+                if (!obj.TryGetComponent(out Puck puck)) return;
+
+                m_puck = puck;
             }
 
             var spawn = puckSpawns[index];
-            m_puckObject.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
-
-            if (m_puckObject.TryGetComponent(out Rigidbody rigidbody)) {
-                rigidbody.velocity = Vector3.zero;
-            }
+            
+            m_puck.Reset();
+            m_puck.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
         }
 
         public bool LockPlayer {

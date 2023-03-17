@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4393027736253424226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6661790877929932546}
@@ -71,7 +71,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6232533503246269042}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,7 +121,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0.17033619}
+  - {x: 0, y: 0, z: 0.15}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -211,8 +211,8 @@ Transform:
   m_GameObject: {fileID: 6661790877929932550}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 85696671745970447}
   - {fileID: 2869198551174522291}
@@ -323,11 +323,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 9
-  dashMaxVelocity: 10
-  dashChargeSpeed: 14.63
-  dashCooldown: 0.25
-  dashAimConeAngle: 45
-  dashAimIterations: 25
+  dashMaxVelocity: 6
+  dashChargeSpeed: 20
+  dashCooldown: 0.5
+  dashAimConeAngle: 35
+  dashAimIterations: 10
+  dashPredictionIntensity: 0.25
   dashAimMask:
     serializedVersion: 2
     m_Bits: 256
@@ -358,8 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 7009651092816231530, guid: bcb8e1edac860d04b9660e9991ba297a, type: 3}
-  - {fileID: 1402298386567976296, guid: c69ee6d946c98824cb1451fdecfbe805, type: 3}
+  - {fileID: 2456481258762081412, guid: bcb8e1edac860d04b9660e9991ba297a, type: 3}
+  - {fileID: 1004660629007636104, guid: c69ee6d946c98824cb1451fdecfbe805, type: 3}
 --- !u!54 &6661790877929932544
 Rigidbody:
   m_ObjectHideFlags: 0
