@@ -9,7 +9,7 @@ namespace Airhockey.Core {
 
         private void OnTriggerEnter(Collider other) {
             if (!other.gameObject.layer.IsInLayerMask(mask)) return;
-
+            
             Signals.Publish(GameSignal.OnGoalScored, index);
         }
     }

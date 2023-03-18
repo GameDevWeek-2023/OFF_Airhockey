@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Airhockey.Events;
+using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 namespace Airhockey.Core {
     [RequireComponent(typeof(PlayerInputManager))]
@@ -12,6 +15,8 @@ namespace Airhockey.Core {
 
         [SerializeField] private Transform[] playerSpawns;
         [SerializeField] private Transform[] puckSpawns;
+
+        [SerializeField] private float resetDuration = 3f;
 
         private readonly Dictionary<int, Player> m_players = new Dictionary<int, Player>();
         private PlayerInputManager m_playerInputManager;
@@ -58,7 +63,7 @@ namespace Airhockey.Core {
             }
 
             var spawn = puckSpawns[index];
-            
+
             m_puck.Reset();
             m_puck.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
         }
@@ -76,6 +81,24 @@ namespace Airhockey.Core {
                 var spawn = playerSpawns[pair.Key];
                 pair.Value.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
             }
+        }
+
+        public void ResetArena(int puckSpawnIndex, TweenCallback callback) {
+            var sequence = DOTween.Sequence();
+
+            foreach (var pair in m_players) {
+                var playerSpawn = playerSpawns[pair.Key];
+                sequence.Insert(0, pair.Value.transform.DOMove(playerSpawn.position, resetDuration));
+                sequence.Insert(0, pair.Value.transform.DORotateQuaternion(playerSpawn.rotation, resetDuration));
+            }
+
+            var puckSpawn = puckSpawns[puckSpawnIndex];
+            m_puck.Reset();
+            sequence.Insert(0, m_puck.transform.DOMove(puckSpawn.position, resetDuration));
+            sequence.Insert(0, m_puck.transform.DORotateQuaternion(puckSpawn.rotation, resetDuration));
+
+            sequence.OnComplete(callback);
+            sequence.SetEase(Ease.OutBounce);
         }
     }
 }

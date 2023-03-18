@@ -151,6 +151,7 @@ namespace Airhockey.Core {
 
             m_dashCharge = 0.0f;
             m_rigidbody.velocity = Vector3.zero;
+            Input = Vector3.zero;
         }
 
         private Vector3 AimDirection() {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 namespace Airhockey.Events {
+    
     public static class Signals {
         public readonly struct Args {
             private readonly object[] values;
