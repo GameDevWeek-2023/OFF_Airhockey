@@ -52,18 +52,17 @@ namespace Airhockey.Core {
         private class DisableState : State<Round, Match> {
             public override void OnEnter() {
                 Parent.Arena.LockPlayer = true;
+                
+                Parent.Arena.ResetArena(StateMachine.goalScoredIn, () => {
+                    Signals.Publish(GameSignal.OnRoundEnd);
 
-                Parent.Arena.ResetPlayer();
-                Parent.Arena.SpawnPuck(StateMachine.goalScoredIn);
+                    if (!Parent.DidPlayerWon()) {
+                        StateMachine.SwitchState("countdown");
+                        return;
+                    }
 
-                Signals.Publish(GameSignal.OnRoundEnd);
-
-                if (!Parent.DidPlayerWon()) {
-                    StateMachine.SwitchState("countdown");
-                    return;
-                }
-
-                Signals.Publish(GameSignal.OnMatchEnd);
+                    Signals.Publish(GameSignal.OnMatchEnd);
+                });
             }
 
             public override void OnExit() { }

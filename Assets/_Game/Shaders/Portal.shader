@@ -1,11 +1,11 @@
-﻿Shader "Tisch4/Portal"
+﻿Shader "Air/Portal"
 {
     Properties
     {
         [Header(Noise)]
         [Space(6)]
-        _NoiseSwirlColor("Swirl Color", Color) = (1, 0, 0, 1)
-        _NoiseGlowColor("Glow Color", Color) = (1, 0, 0, 1)
+        [HDR]_NoiseSwirlColor("Swirl Color", Color) = (1, 0, 0, 1)
+        [HDR] _NoiseGlowColor("Glow Color", Color) = (1, 0, 0, 1)
         _NoiseEmission("Emission", Float) = 10
         _NoiseTex("Texture (R)", 2D) = "white"{}
         _NoiseThreshold("Threshold", Range(0.0, 1.0)) = 0.1

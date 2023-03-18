@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Airhockey.Events;
 using UnityEngine;
 
@@ -44,5 +45,6 @@ namespace Airhockey.Core {
             var max = m_goals.Max();
             return max >= maxGoals;
         }
+
     }
 }

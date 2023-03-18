@@ -17,6 +17,8 @@
         float _BlurAmount;
         float _StandardDeviation;
         float _Center;
+        float _TopAmount;
+        float _BottomAmount;
         int _Steps;
         ENDHLSL
 
@@ -33,7 +35,12 @@
                 const float min_offs = float(_Steps - 1) / -2;
                 const float max_offs = float(_Steps - 1) / 2;
 
-                const float amount = pow((i.texcoord.y * _Center) * 2.0 - 1.0, 2.0) * _BlurAmount * 0.01f;
+                const float top = smoothstep(1.0 - _TopAmount, 1.0, i.texcoord.y);
+                const float bottom = smoothstep(_BottomAmount, 0.0, i.texcoord.y);
+
+                const float amount = (top + bottom) * 0.01 * _BlurAmount;
+
+                //const float amount = pow((i.texcoord.y * _Center) * 2.0 - 1.0, 2.0) * _BlurAmount;
                 float sum = 0;
 
                 float4 blurred = 0;
@@ -71,7 +78,12 @@
                 const float min_offs = float(_Steps - 1) / -2;
                 const float max_offs = float(_Steps - 1) / 2;
 
-                const float amount = pow((i.texcoord.y * _Center) * 2.0 - 1.0, 2.0) * _BlurAmount * 0.01f;
+                const float top = smoothstep(1.0 - _TopAmount, 1.0, i.texcoord.y);
+                const float bottom = smoothstep(_BottomAmount, 0.0, i.texcoord.y);
+
+                const float amount = (top + bottom) * 0.01 * _BlurAmount;
+
+                //const float amount = pow((i.texcoord.y * _Center) * 2.0 - 1.0, 2.0) * _BlurAmount * 0.01f;
 
                 float4 blurred = 0;
                 float sum = 0;

@@ -94,10 +94,13 @@ MonoBehaviour:
     value: 1
   amount:
     overrideState: 1
-    value: 0.19
-  center:
+    value: 0.3
+  topAmount:
     overrideState: 1
-    value: 1.1
+    value: 0.13
+  bottomAmount:
+    overrideState: 1
+    value: 0.28
   standardDeviation:
     overrideState: 0
     value: 0.06
