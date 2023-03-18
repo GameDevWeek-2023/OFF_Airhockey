@@ -152,8 +152,9 @@
 
                 const float2 offset = swirl.xx * 0.1;
                 fixed3 color = tex2Dproj(_GrabTexture, i.grab_uv + half4(offset, 0, 0));
-                color = lerp(color, _NoiseGlowColor.rgb, _NoiseGlowColor.a);
+                color = lerp(color, _NoiseSwirlColor.rgb, _NoiseSwirlColor.a);
                 color = saturate(color + rim + swirl);
+                color += _NoiseGlowColor;
 
                 clip(cutoff - 1.0);
 
