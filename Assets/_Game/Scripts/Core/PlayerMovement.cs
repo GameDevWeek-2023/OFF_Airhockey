@@ -5,6 +5,7 @@ using Airhockey.Events;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Airhockey.Core {
@@ -16,6 +17,7 @@ namespace Airhockey.Core {
         [SerializeField, BoxGroup("Dash")] private float dashCooldown = 1f;
         [SerializeField, BoxGroup("Dash")] private float dashAimConeAngle = 45f;
         [SerializeField, BoxGroup("Dash")] private int dashAimIterations = 10;
+        [SerializeField, Foldout("Events")] private UnityEvent onPlayerDashed;
 
         [SerializeField, BoxGroup("Dash"), Range(0f, 1f)]
         private float dashPredictionIntensity = 0.5f;
@@ -78,13 +80,14 @@ namespace Airhockey.Core {
             if (!DashCharging || DashOnCooldown) return;
 
             m_aimDirection = AimDirection();
-
             m_rigidbody.AddForce(m_aimDirection * m_dashCharge, ForceMode.Impulse);
+            
             m_dashCharge = 0.0f;
-
             DashCharging = false;
             DashOnCooldown = true;
             SlowmoManager.StopSlowmo(Player.Id);
+
+            onPlayerDashed?.Invoke();
 
             DOTween.Sequence().SetUpdate(true).AppendInterval(dashCooldown).OnComplete(() => DashOnCooldown = false);
         }

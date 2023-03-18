@@ -1113,8 +1113,8 @@ Shader "BruteForce/InteractiveGrass"
 					}
 
 				 float3 normalDirection = normalize(i.normal);
-				 float3 lightDirection;
-				 float attenuation;
+				 float3 lightDirection = float3(1, 1, 1);
+				 float attenuation = 0;
 				 float cookieAttenuation = 1.0;
 
 #if defined(DIRECTIONAL)

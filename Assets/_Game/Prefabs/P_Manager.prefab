@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6950172291909890188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6950172291909890187}
+  - component: {fileID: 6950172291909890184}
+  - component: {fileID: 6950172291909890185}
+  - component: {fileID: 6950172291909890186}
+  - component: {fileID: 6950172291909890183}
+  - component: {fileID: 1648684083195429420}
+  m_Layer: 0
+  m_Name: P_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6950172291909890187
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6950172291909890184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff56d88bdd94e91bdeaa88a1e4d9e7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetails:
+  - name: Player 1
+    color: {r: 1, g: 0, b: 0, a: 1}
+  - name: Player2
+    color: {r: 0, g: 0.45882353, b: 1, a: 1}
+--- !u!114 &6950172291909890185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b369c9efee425c97cdfa82d016f706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timescale: 0.25
+--- !u!114 &6950172291909890186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b9168dd8809455186e0dd54d128908e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawns:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  prefab: {fileID: 7081119580095832476, guid: 6582ce0a3caebdc468c68020e0624b70, type: 3}
+  maxPortalSpawn: 4
+  waitForSpawn: 5
+  waitForDespawn: 10
+--- !u!114 &6950172291909890183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc382f1a51f4a479816590c261c2428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: 8dcb7934a7d6ab842985a63d986d8bd7, type: 2}
+  sets:
+  - {fileID: 11400000, guid: d0dcb3ca5f03b624d90bc085c3684fa5, type: 2}
+  - {fileID: 11400000, guid: 5ac4c70fd430a8e4d9c696ee206d4159, type: 2}
+  - {fileID: 11400000, guid: 2459fd10f3061d944ae2d40d2f1ac478, type: 2}
+  - {fileID: 11400000, guid: 10be763e794a1b846b549d8cb16a9a5e, type: 2}
+  - {fileID: 11400000, guid: 27624bee91ff7a740bb8d830cf47957e, type: 2}
+  - {fileID: 11400000, guid: ddbe52b59ab707c49878e1454949302a, type: 2}
+  - {fileID: 11400000, guid: 74f1234513c8f3241861d31743d7b957, type: 2}
+  - {fileID: 11400000, guid: 36095dbffb1ddb741a6e79e4b9f41b66, type: 2}
+--- !u!114 &1648684083195429420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6950172291909890188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 944fa46f0c794c39ab6badb6c1fc5a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setName: Soundtrack
+  priority: 1
+  mixerGroup: Soundtrack
+  spatial: 0
+  playOnAwake: 1

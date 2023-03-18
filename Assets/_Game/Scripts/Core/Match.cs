@@ -2,12 +2,14 @@
 using System.Linq;
 using Airhockey.Events;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Airhockey.Core {
     [RequireComponent(typeof(Arena))]
     public class Match : MonoBehaviour {
         [SerializeField] private int maxGoals = 3;
         [SerializeField] private float countdown;
+        public UnityEvent onMatchEnd;
 
         private int[] m_goals;
         private Round m_round;
@@ -24,10 +26,16 @@ namespace Airhockey.Core {
 
         private void OnEnable() {
             Signals.Subscribe(GameSignal.OnGoalScored, OnGoalScored);
+            Signals.Subscribe(GameSignal.OnMatchEnd, OnMatchEnd);
         }
 
         private void OnDisable() {
             Signals.Unsubscribe(GameSignal.OnGoalScored, OnGoalScored);
+            Signals.Unsubscribe(GameSignal.OnMatchEnd, OnMatchEnd);
+        }
+
+        private void OnMatchEnd(Signals.Args args) {
+            onMatchEnd?.Invoke();
         }
 
         private void OnGoalScored(Signals.Args obj) {
@@ -45,6 +53,5 @@ namespace Airhockey.Core {
             var max = m_goals.Max();
             return max >= maxGoals;
         }
-
     }
 }

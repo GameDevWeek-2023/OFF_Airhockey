@@ -211,7 +211,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -8984867775313868696, guid: 0d51a8d4eb0fa1a4fad86749c2292a54, type: 3}
+  m_Mesh: {fileID: 8101696466322432231, guid: 6b837d85e904b3444a79bee5462e9659, type: 3}
 --- !u!1 &6661790877929932550
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +230,8 @@ GameObject:
   - component: {fileID: 5950357320246606462}
   - component: {fileID: 5773472683240372384}
   - component: {fileID: 5471025451437589782}
+  - component: {fileID: 2917693457144815768}
+  - component: {fileID: 200123293966545544}
   m_Layer: 0
   m_Name: P_Player
   m_TagString: Untagged
@@ -347,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b53d08bf4c2f47e581cac586153be8d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLocked: 0
+  isLocked: 1
 --- !u!114 &6661790877929932547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,6 +368,21 @@ MonoBehaviour:
   dashCooldown: 0.5
   dashAimConeAngle: 35
   dashAimIterations: 10
+  onPlayerDashed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 200123293966545544}
+        m_TargetAssemblyTypeName: Airhockey.Sound.SoundPlayer, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   dashPredictionIntensity: 0.25
   dashAimMask:
     serializedVersion: 2
@@ -441,12 +458,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d90365be704fa89809010ce96ba5e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useCooldown: 1
+  cooldown: 0.25
+  mask:
+    serializedVersion: 2
+    m_Bits: 256
   onCollisionEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5471025451437589782}
         m_TargetAssemblyTypeName: _Game.Scripts.Ambient.ScalePunchAnim, Assembly-CSharp
         m_MethodName: Animate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2917693457144815768}
+        m_TargetAssemblyTypeName: Wasserstrom.Sound.SoundPlayer, Assembly-CSharp
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -478,6 +512,40 @@ MonoBehaviour:
   punch: {x: 0.25, y: 0.25, z: 0.25}
   duration: 0.1
   ease: 0
+--- !u!114 &2917693457144815768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6661790877929932550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 944fa46f0c794c39ab6badb6c1fc5a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setName: SFXOnKick
+  priority: 1
+  mixerGroup: SFX
+  spatial: 1
+  playOnAwake: 0
+--- !u!114 &200123293966545544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6661790877929932550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 944fa46f0c794c39ab6badb6c1fc5a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setName: SFXOnDash
+  priority: 1
+  mixerGroup: SFX
+  spatial: 1
+  playOnAwake: 0
 --- !u!1 &8837407912870543411
 GameObject:
   m_ObjectHideFlags: 0

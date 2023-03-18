@@ -41,6 +41,7 @@ namespace Airhockey.Interaction {
         private void UpdateSelection() {
             var ray = m_camera.ScreenPointToRay(m_cursorPosition);
             if (!Physics.Raycast(ray, out RaycastHit hit, float.PositiveInfinity, mask)) {
+                m_selected?.OnHoverExit();
                 m_selected = null;
                 return;
             }
@@ -52,6 +53,7 @@ namespace Airhockey.Interaction {
             }
 
             if (interact != m_selected) {
+                m_selected?.OnHoverExit();
                 interact.OnHoverEnter();
             }
 

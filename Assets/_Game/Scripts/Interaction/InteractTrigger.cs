@@ -16,7 +16,6 @@ namespace Airhockey.Interaction {
         }
 
         public void OnInteract(int button) {
-            Debug.Log("OnInteract");
             onInteract?.Invoke(button);
         }
     }
